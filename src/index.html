@@ -14,6 +14,19 @@
 	</head>
     
 	<body id="body">
-        <input type="button" value="Start" onclick="createHuman(4,1,1,1)">
+        <input type="button" value="Start" onclick="readInput()">
+		<h2>Persone iniziali</h2>
+		<input type="number" id="totHuman" value="40">
+
+		<h2>Contagi iniziali</h2>
+		<input type="range" id="contagiati" min="0" max="100" value="10" onchange="checkSliderValue('contagiati')">
+
+		<h2>Vaccinati iniziali</h2>
+		<input type="checkbox" id="vaccinatiAsk" onchange="implementCheckBoxes('vaccinatiAsk','vaccinati')">
+		<input type="range" id="vaccinati" min="0" max="100" value="0" onchange="checkSliderValue('vaccinati')" disabled>
+
+		<h2>Persone con Mascherina iniziali</h2>
+		<input type="checkbox" id="conMascherinaAsk" onchange="implementCheckBoxes('conMascherinaAsk','conMascherina')">
+		<input type="range" min="0" max="100" value="0" id="conMascherina" onchange="checkSliderValue('conMascherina')" disabled>
 	</body>
 </html>
