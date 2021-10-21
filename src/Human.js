@@ -1,7 +1,7 @@
 const RADIUS = 5;
 //classe human che serve a descrivere gli umani della simulazione
 class Human{
-    constructor(vaccinated, withMask, infected){
+    constructor(vaccinated, withMask, infected,index){
         if(typeof vaccinated == "boolean" 
             && typeof withMask == "boolean" 
             && typeof infected == "boolean"){
@@ -16,7 +16,7 @@ class Human{
             }else if(this.vaccinated){
                 this.color = '#0000FF';
             }else{
-                this.color = "#FFFFFF";
+                this.color = "#999";
             }
         }else{
             this.vaccinated = false;
@@ -27,11 +27,12 @@ class Human{
         this.direction = Math.floor(Math.random() * 7);
         this.x = Math.floor(Math.random() * 600);
         this.y = Math.floor(Math.random() * 500);
+        this.index = index;
     }
 
     //setta l'Human a infetto
     set_infected(){
-        console.log("infettato");
+        console.log("infettato " + this.index);
         this.infected = true;
         this.color = "#FF0000";
     }
@@ -158,6 +159,7 @@ class Human{
         ctx.beginPath();
         ctx.arc(this.x,this.y,RADIUS,0,2*Math.PI);
         ctx.fill();
+        ctx.fillText(this.index,this.x+10,this.y);
         ctx.stroke();
     }
 

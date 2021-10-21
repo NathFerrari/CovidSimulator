@@ -15,25 +15,50 @@
 	</head>
     
 	<body id="body">
-        <input type="button" value="Start" onclick="readInput()">
-		<h2>Persone iniziali</h2>
-		<input type="number" id="totHuman" value="40">
+		
+		<div class="container" onclick="menuIcon(this)">
+			<div class="bar1"></div>
+			<div class="bar2"></div>
+			<div class="bar3"></div>
+		</div><br>
 
-		<h2>Contagi iniziali</h2>
-		<input type="range" id="contagiati" min="0" max="100" 
-		value="10" onchange="checkSliderValue('contagiati')">
+		<div id="parametriSimulazione">
+			<input type="button" id="createHuman" value="Create Human" onclick="readInput()"><br>
+		
+			<h2>Persone iniziali</h2>
+			<input type="number" id="totHuman" value="40">
 
-		<h2>Vaccinati iniziali</h2>
-		<input type="checkbox" id="vaccinatiAsk" 
-		onchange="implementCheckBoxes('vaccinatiAsk','vaccinati')">
-		<input type="range" id="vaccinati" min="0" max="100"
-		value="0" onchange="checkSliderValue('vaccinati')" disabled>
+			<h2>Contagi iniziali(rossi)</h2>
+			<input type="range" id="contagiati" min="1" max="100" 
+			value="10" onchange="checkSliderValue('contagiati')">
+			<p>Value: <span id="pcontagiati">10%</span></p>
 
-		<h2>Persone con Mascherina iniziali</h2>
-		<input type="checkbox" id="conMascherinaAsk"
-		onchange="implementCheckBoxes('conMascherinaAsk','conMascherina')">
-		<input type="range" min="0" max="100" value="0" 
-		id="conMascherina" 
-		onchange="checkSliderValue('conMascherina')" disabled>
+			<h2>Vaccinati iniziali(blu)</h2>
+			<input type="checkbox" id="vaccinatiAsk" 
+			onchange="implementCheckBoxes('vaccinatiAsk','vaccinati')">
+			<input type="range" id="vaccinati" min="0" max="100"
+			value="0" onchange="checkSliderValue('vaccinati')" disabled>
+			<p>Value: <span id="pvaccinati">0%</span></p>
+
+			<h2>Persone con Mascherina iniziali(verdi)</h2>
+			<input type="checkbox" id="conMascherinaAsk"
+			onchange="implementCheckBoxes('conMascherinaAsk','conMascherina')">
+			<input type="range" min="0" max="100" value="0" 
+			id="conMascherina" 
+			onchange="checkSliderValue('conMascherina')" disabled>
+			<p>Value: <span id="pconMascherina">0%</span></p>
+		</div>
+
+		<div id="gameZone">
+			<h1 id="title">Covid Simulator</h1>
+			<canvas id="container" width="600" height="500"></canvas><br>
+			<input type="button" id="start" value="Start" onclick="startMovementInterval()">
+			<input type="button" id="pause" value="Pause" onclick="pauseMovementInterval()">
+			<input type="button" id="stop" value="Stop" onclick="stop()">
+		</div>
+
+		<div id="menu">
+			<a onclick="menuSelectParametriSimulazione()">parametriSimulazioe</a>
+		</div>
 	</body>
 </html>
