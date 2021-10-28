@@ -12,11 +12,12 @@
 	    <link rel="stylesheet" href="./css.css">
 	    <script src="./Human.js"></script>
 		<script src="./script.js"></script>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	</head>
     
-	<body id="body">
+	<body id="body" onload="readInput()">
 		
-		<div class="container" onclick="menuIcon(this)">
+		<div class="menu" id="menu" onclick="menuIconOpen(this)">
 			<div class="bar1"></div>
 			<div class="bar2"></div>
 			<div class="bar3"></div>
@@ -54,11 +55,52 @@
 			<canvas id="container" width="600" height="500"></canvas><br>
 			<input type="button" id="start" value="Start" onclick="startMovementInterval()">
 			<input type="button" id="pause" value="Pause" onclick="pauseMovementInterval()">
-			<input type="button" id="stop" value="Stop" onclick="stop()">
+			<input type="button" id="stop" value="Reset" onclick="stop()">
 		</div>
 
-		<div id="menu">
-			<a onclick="menuSelectParametriSimulazione()">parametriSimulazioe</a>
+		<div id="statistics">
+			<label>Sani iniziali: </label><label id="startHealty"></label><br>
+			<input type="range" id="startHealtyRange" min="0" max="100" disabled><br>
+			<label>Sani totali: </label><label id="totalHealty"></label><br>
+			<input type="range" id="totalHealtyRange" min="0" max="100" disabled><br>
+			<label>Contagi iniziali: </label><label id="startInfect"></label><br>
+			<input type="range" id="startInfectRange" min="0" max="100" disabled><br>
+			<label>Contagi attuali: </label><label id="momentInfect"></label><br>
+			<input type="range" id="momentInfectRange" min="0" max="100" disabled><br>
+			<label>Vaccinati iniziali: </label><label id="startVaccinated"></label><br>
+			<input type="range" id="startVaccinatedRange" min="0" max="100" disabled><br>
+			<label>Sani vaccinati: </label><label id="vaccinatedHealty"></label><br>
+			<input type="range" id="vaccinatedHealtyRange" min="0" max="100" disabled><br>
+			<label>Vaccinati infetti: </label><label id="vaccinatedInfected"></label><br>
+			<input type="range" id="vaccinatedInfectedRange" min="0" max="100" disabled><br><br>
+			<label>Portatori di mascherina iniziali: </label><label id="startWithMask"></label><br>
+			<input type="range" id="startWithMaskRange" min="0" max="100" disabled><br>
+			<label>Sani con mascherina: </label><label id="withMaskHealty"></label><br>
+			<input type="range" id="withMaskHealtyRange" min="0" max="100" disabled><br>
+			<label>Portatori di mascherina infetti: </label><label id="withMaskInfected"></label><br>
+			<input type="range" id="withMaskInfectedRange" min="0" max="100" disabled><br>
+
+			<div id="myPlot" style="width:100%;max-width:700px"></div>
+		</div>
+
+		<div id="home">
+			<h3>Informazioni generali sulla malattia da coronavirus (COVID-19)</h3>
+			<p>La malattia da coronavirus (COVID-19) è una malattia infettiva causata dal virus SARS-CoV-2.
+
+				La maggior parte delle persone infettate dal virus avrà una malattia respiratoria da lieve a moderata e si riprenderà senza richiedere un trattamento speciale. Tuttavia, alcuni si ammaleranno gravemente e richiederanno assistenza medica. Le persone anziane e quelle con condizioni mediche sottostanti come malattie cardiovascolari, diabete, malattie respiratorie croniche o cancro hanno maggiori probabilità di sviluppare malattie gravi. Chiunque può ammalarsi di COVID-19 e ammalarsi gravemente o morire a qualsiasi età. 
+				
+				Il modo migliore per prevenire e rallentare la trasmissione è essere ben informati sulla malattia e su come il virus si diffonde. Proteggi te stesso e gli altri dal contagio stando ad almeno 1 metro di distanza dagli altri, indossando una maschera adeguata e lavandoti le mani o usando frequentemente una frizione a base di alcol. Fatti vaccinare quando è il tuo turno e segui le indicazioni locali.
+				
+				Il virus può diffondersi dalla bocca o dal naso di una persona infetta in piccole particelle liquide quando questa tossisce, starnutisce, parla, canta o respira. Queste particelle vanno da goccioline respiratorie più grandi ad aerosol più piccoli. È importante praticare l'etichetta respiratoria, per esempio tossendo in un gomito flesso, e rimanere a casa e autoisolarsi fino a quando non ci si riprende se non ci si sente bene.
+			</p>
+
+			<p></p>
+		</div>
+
+		<div id="menuSelection">
+			<a onclick="menuSelectHome()">Home</a><br>
+			<a onclick="menuSelectParametriSimulazione()">Parametri Simulazioe</a><br>
+			<a onclick="menuSelectStatistiche()">Statistiche</a>
 		</div>
 	</body>
 </html>

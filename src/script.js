@@ -5,9 +5,20 @@ var people = new Array();
 let intervalMovement;
 var stopSimulation = false;
 
+var startInfect;
+var startWithMask;
+var startVaccinated;
+var momentInfect;
+var vaccinatedInfected = 0;
+var withMaskInfected = 0;
+
 //metodo che crea gli umani definiti in quantità
 function createHuman(numTot, numInfect, numWithMask, numVaccinated){
     if(numInfect + numVaccinated + numWithMask <= numTot){
+        startInfect = numInfect;
+        startWithMask = numWithMask;
+        startVaccinated = numVaccinated;
+        momentInfect = startInfect;
         for(var i = 0; i < numInfect; i++){
             people.push(new Human(false,false,true,i));
             console.log("creato infetto");
@@ -131,18 +142,120 @@ function infectionControl(){
     }
 }
 
-function menuIcon(x) {
+var lastOpenedId = "home";
+var opened = false;
+
+function menuIconOpen(x) {
+    if(!opened){
+        x.classList.toggle("change");
+        openMenu();
+    }else{
+        menuIconClose(x);
+    }
+    opened = !opened;
+}
+
+function menuIconClose(x) {
+    document.getElementById("menuSelection").style.display = "none";
+    document.getElementById(lastOpenedId).style.display = "block";
     x.classList.toggle("change");
-    openMenu();
 }
 
 function openMenu() {
-    document.getElementById("parametriSimulazione").style.display = none;
-    document.getElementById("menu").style.display = block;
+    document.getElementById("parametriSimulazione").style.display = "none";
+    document.getElementById("statistics").style.display = "none";
+    document.getElementById("home").style.display = "none";
+    document.getElementById("menuSelection").style.display = "block";
 }
 
 function menuSelectParametriSimulazione() {
-    document.getElementById("parametriSimulazione").style.display = block;
-    document.getElementById("menu").style.display = none;
+    document.getElementById("parametriSimulazione").style.display = "block";
+    lastOpenedId = "parametriSimulazione";
+    menuIconOpen(document.getElementById("menu"));
 }
 
+function menuSelectStatistiche(){
+    document.getElementById("statistics").style.display = "block";
+    lastOpenedId = "statistics";
+    menuIconOpen(document.getElementById("menu"));
+}
+
+function menuSelectHome(){
+    document.getElementById("home").style.display = "block";
+    lastOpenedId = "home";
+    menuIconOpen(document.getElementById("menu"));
+}
+
+
+
+setInterval(readState, 1000);
+function readState(){
+    momentInfect = 0;
+    vaccinatedInfected = 0;
+    withMaskInfected = 0;
+    for (var i = 0; i < people.length; i++) {
+        if(people[i].infected){
+            momentInfect += 1;
+            if (people[i].vaccinated) {
+                vaccinatedInfected += 1;
+            }else if(people[i].withMask){
+                withMaskInfected += 1;
+            }
+        }
+    }
+    makeStatistics();
+}
+
+function makeStatistics(){    
+    var calc = ((people.length-startInfect)/(people.length/100)).toFixed();
+    document.getElementById("startHealty").innerHTML = people.length-startInfect+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("startHealtyRange").value = calc;
+    calc = ((people.length-momentInfect)/(people.length/100)).toFixed();
+    document.getElementById("totalHealty").innerHTML = people.length-momentInfect+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("totalHealtyRange").value = calc;
+    calc = (startInfect/(people.length/100)).toFixed();
+    document.getElementById("startInfect").innerHTML = startInfect+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("startInfectRange").value = calc;
+    calc = (momentInfect/(people.length/100)).toFixed();
+    document.getElementById("momentInfect").innerHTML = momentInfect+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("momentInfectRange").value = calc;
+    calc = (startVaccinated/(people.length/100)).toFixed();
+    document.getElementById("startVaccinated").innerHTML = startVaccinated+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("startVaccinatedRange").value = calc;
+    calc = ((startVaccinated-vaccinatedInfected)/(people.length/100)).toFixed();
+    document.getElementById("vaccinatedHealty").innerHTML = startVaccinated-vaccinatedInfected+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("vaccinatedHealtyRange").value = calc;
+    calc = (vaccinatedInfected/(people.length/100)).toFixed();
+    document.getElementById("vaccinatedInfected").innerHTML = vaccinatedInfected+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("vaccinatedInfectedRange").value = calc;
+    calc = (withMaskInfected/(people.length/100)).toFixed();
+    document.getElementById("withMaskInfected").innerHTML = withMaskInfected+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("startWithMaskRange").value = calc;
+    calc = ((startWithMask-withMaskInfected)/(people.length/100)).toFixed();
+    document.getElementById("withMaskHealty").innerHTML = startWithMask-withMaskInfected+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("withMaskHealtyRange").value = calc;
+    calc = (startWithMask/(people.length/100)).toFixed();
+    document.getElementById("startWithMask").innerHTML = startWithMask+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("withMaskInfectedRange").value = calc;
+}
+
+
+var xArray = [50,60,70,80,90,100,110,120,130,140,150];
+var yArray = [7,8,8,9,9,9,10,11,14,14,15];
+
+// Define Data
+var data = [{
+  x:xArray,
+  y:yArray,
+  mode:"markers"
+}];
+
+// Define Layout
+var layout = {
+  xaxis: {range: [40, 160], title: "tempo"},
+  yaxis: {range: [5, 16], title: "contagi"},  
+  title: "Contagi nel tempo"
+};
+
+// Display using Plotly
+Plotly.newPlot("myPlot", data, layout);

@@ -18,9 +18,9 @@
     color: green;
 }
 
-#ParametriSimulazione{
-    position: absolute;
-    top: 10%;
+#parametriSimulazione{
+    width: 40%;
+    display: none;
 }
 
 #gameZone{
@@ -29,12 +29,22 @@
     right: 10%;
 }
 
-#menu{
+#menuSelection{
+    width: 40%;
     display: none;
 }
 
+#statistics{
+    width: 40%;
+    display: none;
+}
+
+#home{
+    width: 40%;
+}
+
 /* menu css */
-.container {
+.menu {
     display: inline-block;
     cursor: pointer;
 }
