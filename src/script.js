@@ -51,6 +51,7 @@ function startMovementInterval(){
     document.getElementById("start").disabled = true;
     document.getElementById("pause").disabled = false;
     console.log("start");
+    window.sessionStorage.setItem('stato', 'start');
 }
 
 function pauseMovementInterval(){
@@ -58,6 +59,7 @@ function pauseMovementInterval(){
     document.getElementById("start").disabled = false;
     document.getElementById("pause").disabled = true;
     console.log("pause");
+    window.sessionStorage.setItem('stato', 'pause');
 }
 
 function stop(){
@@ -79,6 +81,7 @@ function moveEveryOne(){
         document.getElementById("pause").disabled = false;
         document.getElementById("createHuman").disabled = false;
         ctx.clearRect(0, 0, 600, 500);
+        window.sessionStorage.setItem('stato', 'stop');
     }else{
         if(document.getElementById("container") != null){
             for(var i = 0;i < people.length;i++){
@@ -142,6 +145,7 @@ function infectionControl(){
     }
 }
 
+//sezione del menu
 var lastOpenedId = "home";
 var opened = false;
 
@@ -237,25 +241,5 @@ function makeStatistics(){
     calc = (startWithMask/(people.length/100)).toFixed();
     document.getElementById("startWithMask").innerHTML = startWithMask+" percentuale rispetto al totale: " + calc +"%";
     document.getElementById("withMaskInfectedRange").value = calc;
+    window.sessionStorage.setItem('infect', momentInfect);
 }
-
-
-var xArray = [50,60,70,80,90,100,110,120,130,140,150];
-var yArray = [7,8,8,9,9,9,10,11,14,14,15];
-
-// Define Data
-var data = [{
-  x:xArray,
-  y:yArray,
-  mode:"markers"
-}];
-
-// Define Layout
-var layout = {
-  xaxis: {range: [40, 160], title: "tempo"},
-  yaxis: {range: [5, 16], title: "contagi"},  
-  title: "Contagi nel tempo"
-};
-
-// Display using Plotly
-Plotly.newPlot("myPlot", data, layout);

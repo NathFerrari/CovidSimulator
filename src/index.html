@@ -80,7 +80,41 @@
 			<label>Portatori di mascherina infetti: </label><label id="withMaskInfected"></label><br>
 			<input type="range" id="withMaskInfectedRange" min="0" max="100" disabled><br>
 
-			<div id="myPlot" style="width:100%;max-width:700px"></div>
+			<div id="grafico"></div>
+			<script>
+				var xArray = [];
+				var yArray = [];
+				var second = 0;
+				setInterval(printPlot, 1000);
+				function printPlot(){
+					if(window.sessionStorage.getItem('stato') == 'start'){
+						second++;
+						yArray.push(window.sessionStorage.getItem('infect'));
+						xArray.push(second);
+					}else if(window.sessionStorage.getItem('stato') == 'stop'){
+						second = 0;
+						xArray = [];
+						yArray = [];
+					}else if(window.sessionStorage.getItem('stato') == 'pause'){}
+
+					// Define Data
+					var data = [{
+					x: xArray,
+					y: yArray,
+					mode:"lines"
+					}];
+
+					// Define Layout
+					var layout = {
+					xaxis: {title: "tempo(s)"},
+					yaxis: {title: "contagi(unità)"},  
+					title: "Contagi nel tempo"
+					};
+
+					// Display using Plotly
+					Plotly.newPlot("grafico", data, layout);
+				}
+			</script>
 		</div>
 
 		<div id="home">
