@@ -167,41 +167,45 @@ class Human{
         if(this.x <= human.x+RADIUS*2 && this.x >= human.x-RADIUS*2
             && this.y <= human.y+RADIUS*2 && this.y >= human.y-RADIUS*2 
             && !human.infected){
+            var nor = document.getElementById("nor").value;
+            var vax = document.getElementById("vax").value;
+            var msk = document.getElementById("msk").value;
+            console.log(nor + " " + vax + " " + msk);
             var random = Math.floor(Math.random()*100);
             if(this.vaccinated && human.vaccinated){
                 if(random<5){
                     human.set_infected();
                 }
             }else if(this.withMask && human.withMask){
-                if(random<15){
+                if(random<msk+msk){
                     human.set_infected();
                 }
             }else if(this.withMask && human.vaccinated){
-                if(random<10){
+                if(random<msk+vax){
                     human.set_infected();
                 }
             }else if(this.vaccinated && human.withMask){
-                if(random<10){
+                if(random<vax+msk){
                     human.set_infected();
                 }
             }else if(human.withMask){
-                if(random<30){
+                if(random<msk+nor){
                     human.set_infected();
                 }
             }else if(this.withMask){
-                if(random<30){
+                if(random<msk+nor){
                     human.set_infected();
                 }
             }else if(this.vaccinated){
-                if(random<20){
+                if(random<vax+nor){
                     human.set_infected();
                 }
             }else if(human.vaccinated){
-                if(random<20){
+                if(random<vax+nor){
                     human.set_infected();
                 }
             }else{
-                if(random<80){
+                if(random<nor+nor){
                     human.set_infected();
                 }
             }

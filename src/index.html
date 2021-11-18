@@ -48,6 +48,17 @@
 			id="conMascherina" 
 			onchange="checkSliderValue('conMascherina')" disabled>
 			<p>Value: <span id="pconMascherina">0%</span></p>
+
+
+			<h2>Cambiare le percentuali di contagio</h2>
+			normali<input type="range" value="0" name="nor" id="nor" max="50" onchange="printSliderValue('nor')"><br>
+			<p>Value: <span id="pnor">0%</span></p>
+			vaccinati<input type="range" value="0" name="vax" id="vax" max="50" onchange="printSliderValue('vax')"><br>
+			<p>Value: <span id="pvax">0%</span></p>
+			con mascherina<input type="range" value="0" name="msk" id="msk" max="50" onchange="printSliderValue('msk')"><br>
+			<p>Value: <span id="pmsk">0%</span></p>
+			<input type="button" id="setDefaultValue" value="Set Default" onclick="SetInfectionPercentageDefault()"><br>
+
 		</div>
 
 		<div id="gameZone">
@@ -133,7 +144,7 @@
 
 		<div id="menuSelection">
 			<a onclick="menuSelectHome()">Home</a><br>
-			<a onclick="menuSelectParametriSimulazione()">Parametri Simulazioe</a><br>
+			<a onclick="menuSelectParametriSimulazione()">Parametri Simulazione</a><br>
 			<a onclick="menuSelectStatistiche()">Statistiche</a>
 		</div>
 	</body>

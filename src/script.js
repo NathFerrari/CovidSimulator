@@ -102,6 +102,7 @@ function readInput(){
         document.getElementById("totHuman").value = 400;
         numTot = document.getElementById("totHuman").value;
     }
+    window.sessionStorage.setItem('stato', 'pause');
     
     var numInfect = Math.round(numTot/100*document.getElementById("contagiati").value);
     var numWithMask = Math.round(numTot/100*document.getElementById("conMascherina").value);
@@ -121,6 +122,11 @@ function checkSliderValue(id){
         document.getElementById(id).value = document.getElementById(id).value-1;
         checkSliderValue(id);
     }
+    printSliderValue(id);
+}
+
+// stampa i valori degli slider
+function printSliderValue(id){
     document.getElementById("p"+id).innerHTML = document.getElementById(id).value+"%";
 }
 
@@ -190,8 +196,8 @@ function menuSelectHome(){
     menuIconOpen(document.getElementById("menu"));
 }
 
-
-
+//sezione statistiche
+//questo metodo serve a sapere qunati infetti ci sono e quanti di questi sono vaccinati o indossano la mascherina
 setInterval(readState, 1000);
 function readState(){
     momentInfect = 0;
@@ -209,7 +215,7 @@ function readState(){
     }
     makeStatistics();
 }
-
+//stampa turtte le statistiche del caso
 function makeStatistics(){    
     var calc = ((people.length-startInfect)/(people.length/100)).toFixed();
     document.getElementById("startHealty").innerHTML = people.length-startInfect+" percentuale rispetto al totale: " + calc +"%";
@@ -242,4 +248,13 @@ function makeStatistics(){
     document.getElementById("startWithMask").innerHTML = startWithMask+" percentuale rispetto al totale: " + calc +"%";
     document.getElementById("withMaskInfectedRange").value = calc;
     window.sessionStorage.setItem('infect', momentInfect);
+}
+
+function SetInfectionPercentageDefault() {
+    document.getElementById("nor").value = 40;
+    document.getElementById("vax").value = 5;
+    document.getElementById("msk").value = 15;
+    printSliderValue("nor");
+    printSliderValue("vax");
+    printSliderValue("msk");
 }
