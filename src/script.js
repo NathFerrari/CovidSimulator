@@ -11,6 +11,7 @@ var startVaccinated;
 var momentInfect;
 var vaccinatedInfected = 0;
 var withMaskInfected = 0;
+var velocita = 100;
 
 //metodo che crea gli umani definiti in quantità
 function createHuman(numTot, numInfect, numWithMask, numVaccinated){
@@ -46,10 +47,14 @@ function createHuman(numTot, numInfect, numWithMask, numVaccinated){
 }
 
 function startMovementInterval(){
+    if(stopSimulation){
+        readInput();
+    }
     //il metodo invoca 10 volte al secondo il metodo moveEveryOne
-    intervalMovement = setInterval(moveEveryOne, 100);
+    intervalMovement = setInterval(moveEveryOne, velocita);
     document.getElementById("start").disabled = true;
     document.getElementById("pause").disabled = false;
+    document.getElementById("stop").disabled = false;
     console.log("start");
     window.sessionStorage.setItem('stato', 'start');
 }
@@ -58,6 +63,7 @@ function pauseMovementInterval(){
     clearInterval(intervalMovement);
     document.getElementById("start").disabled = false;
     document.getElementById("pause").disabled = true;
+    document.getElementById("stop").disabled = true;
     console.log("pause");
     window.sessionStorage.setItem('stato', 'pause');
 }
@@ -108,7 +114,7 @@ function readInput(){
     var numWithMask = Math.round(numTot/100*document.getElementById("conMascherina").value);
     var numVaccinated = Math.round(numTot/100*document.getElementById("vaccinati").value);
 
-    document.getElementById("createHuman").disabled = true;
+    //document.getElementById("createHuman").disabled = true;
     createHuman(numTot,numInfect,numWithMask,numVaccinated);
 }
 
@@ -250,7 +256,7 @@ function makeStatistics(){
     window.sessionStorage.setItem('infect', momentInfect);
 }
 
-function SetInfectionPercentageDefault() {
+function setInfectionPercentageDefault() {
     document.getElementById("nor").value = 40;
     document.getElementById("vax").value = 5;
     document.getElementById("msk").value = 15;
@@ -258,3 +264,11 @@ function SetInfectionPercentageDefault() {
     printSliderValue("vax");
     printSliderValue("msk");
 }
+
+function setVelocityMovement(){
+    velocita = (100/document.getElementById("velocita").value).toFixed();
+    pauseMovementInterval();
+    startMovementInterval();
+    document.getElementById("pvelocita").innerHTML = document.getElementById("velocita").value;
+}
+

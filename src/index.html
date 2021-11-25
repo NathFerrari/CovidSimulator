@@ -15,7 +15,7 @@
 		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	</head>
     
-	<body id="body" onload="readInput()">
+	<body id="body" onload="readInput(),setInfectionPercentageDefault()">
 		
 		<div class="menu" id="menu" onclick="menuIconOpen(this)">
 			<div class="bar1"></div>
@@ -24,10 +24,15 @@
 		</div><br>
 
 		<div id="parametriSimulazione">
-			<input type="button" id="createHuman" value="Create Human" onclick="readInput()"><br>
+			<!--<input type="button" id="createHuman" value="Create Human" onclick="readInput()"><br>-->
 		
 			<h2>Persone iniziali</h2>
 			<input type="number" id="totHuman" value="40">
+
+			<h2>Velocità di movimento</h2>
+			<input type="range" id="velocita" min="1" max="10" 
+			value="1" onchange="setVelocityMovement()">
+			<p>Value: <span id="pvelocita">1</span></p>
 
 			<h2>Contagi iniziali(rossi)</h2>
 			<input type="range" id="contagiati" min="1" max="100" 
@@ -57,7 +62,7 @@
 			<p>Value: <span id="pvax">0%</span></p>
 			con mascherina<input type="range" value="0" name="msk" id="msk" max="50" onchange="printSliderValue('msk')"><br>
 			<p>Value: <span id="pmsk">0%</span></p>
-			<input type="button" id="setDefaultValue" value="Set Default" onclick="SetInfectionPercentageDefault()"><br>
+			<input type="button" id="setDefaultValue" value="Set Default" onclick="setInfectionPercentageDefault()"><br>
 
 		</div>
 
@@ -137,6 +142,7 @@
 				Il modo migliore per prevenire e rallentare la trasmissione è essere ben informati sulla malattia e su come il virus si diffonde. Proteggi te stesso e gli altri dal contagio stando ad almeno 1 metro di distanza dagli altri, indossando una maschera adeguata e lavandoti le mani o usando frequentemente una frizione a base di alcol. Fatti vaccinare quando è il tuo turno e segui le indicazioni locali.
 				
 				Il virus può diffondersi dalla bocca o dal naso di una persona infetta in piccole particelle liquide quando questa tossisce, starnutisce, parla, canta o respira. Queste particelle vanno da goccioline respiratorie più grandi ad aerosol più piccoli. È importante praticare l'etichetta respiratoria, per esempio tossendo in un gomito flesso, e rimanere a casa e autoisolarsi fino a quando non ci si riprende se non ci si sente bene.
+				<br><b>fonte: </b><a href="https://www.covid19.admin.ch/it/overview">https://www.covid19.admin.ch/it/overview</a>
 			</p>
 
 			<p></p>
