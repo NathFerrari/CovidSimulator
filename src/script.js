@@ -84,8 +84,9 @@ function moveEveryOne(){
         people = null;
         people = new Array();
         document.getElementById("start").disabled = false;
-        document.getElementById("pause").disabled = false;
-        document.getElementById("createHuman").disabled = false;
+        document.getElementById("pause").disabled = true;
+        document.getElementById("stop").disabled = true;
+        //document.getElementById("createHuman").disabled = false;
         ctx.clearRect(0, 0, 600, 500);
         window.sessionStorage.setItem('stato', 'stop');
     }else{
@@ -151,6 +152,7 @@ function infectionControl(){
     for (var i = 0; i < people.length; i++) {
         for (var j = 0; j < people.length; j++) {
             if(people[i].infected){
+                people[i].tryChangeInfectedState();
                 people[i].tryInfect(people[j]);
             }
         }
@@ -209,6 +211,7 @@ function readState(){
     momentInfect = 0;
     vaccinatedInfected = 0;
     withMaskInfected = 0;
+    momentDead = 0;
     for (var i = 0; i < people.length; i++) {
         if(people[i].infected){
             momentInfect += 1;
@@ -217,6 +220,8 @@ function readState(){
             }else if(people[i].withMask){
                 withMaskInfected += 1;
             }
+        }else if(people[i].dead){
+            momentDead++;
         }
     }
     makeStatistics();
@@ -224,35 +229,38 @@ function readState(){
 //stampa turtte le statistiche del caso
 function makeStatistics(){    
     var calc = ((people.length-startInfect)/(people.length/100)).toFixed();
-    document.getElementById("startHealty").innerHTML = people.length-startInfect+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("startHealtyRange").value = calc;
-    calc = ((people.length-momentInfect)/(people.length/100)).toFixed();
-    document.getElementById("totalHealty").innerHTML = people.length-momentInfect+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("totalHealtyRange").value = calc;
+    document.getElementById("startHealtyRange").innerHTML = people.length-startInfect+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("startHealtyRange").style.width = calc+"%";
+    calc = ((people.length-momentInfect-momentDead)/(people.length/100)).toFixed();
+    document.getElementById("totalHealtyRange").innerHTML = people.length-momentInfect+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("totalHealtyRange").style.width = calc+"%";
     calc = (startInfect/(people.length/100)).toFixed();
-    document.getElementById("startInfect").innerHTML = startInfect+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("startInfectRange").value = calc;
+    document.getElementById("startInfectRange").innerHTML = startInfect+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("startInfectRange").style.width = calc+"%";
     calc = (momentInfect/(people.length/100)).toFixed();
-    document.getElementById("momentInfect").innerHTML = momentInfect+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("momentInfectRange").value = calc;
+    document.getElementById("momentInfectRange").innerHTML = momentInfect+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("momentInfectRange").style.width = calc+"%";
     calc = (startVaccinated/(people.length/100)).toFixed();
-    document.getElementById("startVaccinated").innerHTML = startVaccinated+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("startVaccinatedRange").value = calc;
+    document.getElementById("startVaccinatedRange").innerHTML = startVaccinated+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("startVaccinatedRange").style.width = calc+"%";
     calc = ((startVaccinated-vaccinatedInfected)/(people.length/100)).toFixed();
-    document.getElementById("vaccinatedHealty").innerHTML = startVaccinated-vaccinatedInfected+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("vaccinatedHealtyRange").value = calc;
+    document.getElementById("vaccinatedHealtyRange").innerHTML = startVaccinated-vaccinatedInfected+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("vaccinatedHealtyRange").style.width = calc+"%";
     calc = (vaccinatedInfected/(people.length/100)).toFixed();
-    document.getElementById("vaccinatedInfected").innerHTML = vaccinatedInfected+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("vaccinatedInfectedRange").value = calc;
-    calc = (withMaskInfected/(people.length/100)).toFixed();
-    document.getElementById("withMaskInfected").innerHTML = withMaskInfected+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("startWithMaskRange").value = calc;
-    calc = ((startWithMask-withMaskInfected)/(people.length/100)).toFixed();
-    document.getElementById("withMaskHealty").innerHTML = startWithMask-withMaskInfected+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("withMaskHealtyRange").value = calc;
+    document.getElementById("vaccinatedInfectedRange").innerHTML = vaccinatedInfected+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("vaccinatedInfectedRange").style.width = calc+"%";
     calc = (startWithMask/(people.length/100)).toFixed();
-    document.getElementById("startWithMask").innerHTML = startWithMask+" percentuale rispetto al totale: " + calc +"%";
-    document.getElementById("withMaskInfectedRange").value = calc;
+    document.getElementById("startWithMaskRange").innerHTML = startWithMask+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("startWithMaskRange").style.width = calc+"%";
+    calc = ((startWithMask-withMaskInfected)/(people.length/100)).toFixed();
+    document.getElementById("withMaskHealtyRange").innerHTML = startWithMask-withMaskInfected+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("withMaskHealtyRange").style.width = calc+"%";
+    calc = (withMaskInfected/(people.length/100)).toFixed();
+    document.getElementById("withMaskInfectedRange").innerHTML = startWithMask+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("withMaskInfectedRange").style.width = calc+"%";
+    calc = (momentDead/(people.length/100)).toFixed();
+    document.getElementById("DeadRange").innerHTML = momentDead+" percentuale rispetto al totale: " + calc +"%";
+    document.getElementById("DeadRange").style.width = calc+"%";
     window.sessionStorage.setItem('infect', momentInfect);
 }
 
@@ -267,8 +275,10 @@ function setInfectionPercentageDefault() {
 
 function setVelocityMovement(){
     velocita = (100/document.getElementById("velocita").value).toFixed();
-    pauseMovementInterval();
-    startMovementInterval();
     document.getElementById("pvelocita").innerHTML = document.getElementById("velocita").value;
+    if(window.sessionStorage.getItem('stato')=="start"){
+        pauseMovementInterval();
+        startMovementInterval();
+    }
 }
 

@@ -9,6 +9,8 @@ class Human{
             this.vaccinated = vaccinated;
             this.withMask = withMask;
             this.infected = infected;
+            this.gravlyIll = false;
+            this.dead = false;
             if(this.infected){
                 this.color = "#FF0000";
             }else if(this.withMask){
@@ -67,43 +69,45 @@ class Human{
 
     //muove in maniera casuale l'Human seguendo una direzione e cambiandola a volte
     casual_move(){
-        var random1 = Math.floor(Math.random()*2)-1;
-        var random2 = Math.floor(Math.random()*2)-1;
-        var random3 = Math.floor(Math.random()*2)-1;
-        if(random1 && random2 && random3){
-            this.changeDirection();
+        if (!this.dead) {
+            var random1 = Math.floor(Math.random()*2)-1;
+            var random2 = Math.floor(Math.random()*2)-1;
+            var random3 = Math.floor(Math.random()*2)-1;
+            if(random1 && random2 && random3){
+                this.changeDirection();
+            }
+    
+            switch (this.direction) {
+                case 0:
+                    this.x++;
+                    break;
+                case 1:
+                    this.x++;
+                    this.y++;
+                    break;
+                case 2:
+                    this.y--;
+                    break;
+                case 3:
+                    this.x--;
+                    this.y++;
+                    break;
+                case 4:
+                    this.x--;
+                    break;
+                case 5:
+                    this.x--;
+                    this.y--;
+                    break;
+                case 6:
+                    this.y++;
+                    break;
+                case 7:
+                    this.x++;
+                    this.y--;
+            }
+            //console.log("nuove coordinate " +this.x+" "+this.y);
         }
-
-        switch (this.direction) {
-            case 0:
-                this.x++;
-                break;
-            case 1:
-                this.x++;
-                this.y++;
-                break;
-            case 2:
-                this.y--;
-                break;
-            case 3:
-                this.x--;
-                this.y++;
-                break;
-            case 4:
-                this.x--;
-                break;
-            case 5:
-                this.x--;
-                this.y--;
-                break;
-            case 6:
-                this.y++;
-                break;
-            case 7:
-                this.x++;
-                this.y--;
-        }
-        //console.log("nuove coordinate " +this.x+" "+this.y);
         this.print();
     }
 
@@ -166,14 +170,14 @@ class Human{
     tryInfect(human){
         if(this.x <= human.x+RADIUS*2 && this.x >= human.x-RADIUS*2
             && this.y <= human.y+RADIUS*2 && this.y >= human.y-RADIUS*2 
-            && !human.infected){
+            && !human.infected && !this.dead && this.infected && !human.dead){
             var nor = document.getElementById("nor").value;
             var vax = document.getElementById("vax").value;
             var msk = document.getElementById("msk").value;
-            console.log(nor + " " + vax + " " + msk);
+            //console.log(nor + " " + vax + " " + msk);
             var random = Math.floor(Math.random()*100);
             if(this.vaccinated && human.vaccinated){
-                if(random<5){
+                if(random<vax+vax){
                     human.set_infected();
                 }
             }else if(this.withMask && human.withMask){
@@ -210,5 +214,67 @@ class Human{
                 }
             }
         }
+    }
+
+    tryChangeInfectedState(){
+        var random = Math.floor(Math.random()*45000);
+        if(random < 1 && !this.dead){
+            if(this.vaccinated){
+                if(this.gravlyIll){ 
+                    if(Math.floor(Math.random()*100) < 5){
+                        this.setDead();
+                    }else{
+                        this.unsetGravlyIll();
+                    }
+                }else if(this.infected){
+                    if(Math.floor(Math.random()*100) < 25){
+                        this.setGravlyIll();
+                    }else {
+                        this.unsetInfected();
+                    }
+                }
+            }else{
+                if(this.gravlyIll){ 
+                    if(Math.floor(Math.random()*100) < 10){
+                        this.setDead();
+                    }else{
+                        this.unsetGravlyIll();
+                    }
+                }else if(this.infected){
+                    if(Math.floor(Math.random()*100) < 35){
+                        this.setGravlyIll();
+                    }else {
+                        this.unsetInfected();
+                    }
+                }
+            }
+        }
+    }
+
+    setGravlyIll(){
+        this.gravlyIll = true;
+        this.color = "#65078a";
+    }
+
+    unsetGravlyIll(){
+        this.gravlyIll = false;
+        this.color = '#FF0000';
+    }
+
+    unsetInfected(){
+        this.infected = false;
+        if (this.vaccinated) {
+            this.color = '#0000FF';
+        } else if(this.withMask){
+            this.color = "#00FF00";
+        }else{
+            this.color = "#999";
+        }
+    }
+
+    setDead(){
+        this.unsetInfected();
+        this.dead = true;
+        this.color = "#000";
     }
 }
