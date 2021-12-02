@@ -39,6 +39,37 @@ class Human{
         this.color = "#FF0000";
     }
 
+    //setta ad ammalato grave
+    setGravlyIll(){
+        this.gravlyIll = true;
+        this.color = "#65078a";
+    }
+
+    //unsetta ammalato grave
+    unsetGravlyIll(){
+        this.gravlyIll = false;
+        this.color = '#FF0000';
+    }
+
+    //unsetta infetto(guarisce)
+    unsetInfected(){
+        this.infected = false;
+        if (this.vaccinated) {
+            this.color = '#0000FF';
+        } else if(this.withMask){
+            this.color = "#00FF00";
+        }else{
+            this.color = "#999";
+        }
+    }
+
+    //setta a morto
+    setDead(){
+        this.unsetInfected();
+        this.dead = true;
+        this.color = "#f1f1f1";
+    }
+
     //muove in maniera casuale l'Human 
     //(cambiando la posizione in maniera completamente casuale)
     //metodo iniziale poco realistico
@@ -167,6 +198,7 @@ class Human{
         ctx.stroke();
     }
 
+    //prova a infettare human
     tryInfect(human){
         if(this.x <= human.x+RADIUS*2 && this.x >= human.x-RADIUS*2
             && this.y <= human.y+RADIUS*2 && this.y >= human.y-RADIUS*2 
@@ -175,7 +207,7 @@ class Human{
             var vax = document.getElementById("vax").value;
             var msk = document.getElementById("msk").value;
             //console.log(nor + " " + vax + " " + msk);
-            var random = Math.floor(Math.random()*100);
+            var random = Math.floor(Math.random()*1000);
             if(this.vaccinated && human.vaccinated){
                 if(random<vax+vax){
                     human.set_infected();
@@ -216,18 +248,19 @@ class Human{
         }
     }
 
+    //invocando questo metodo si prova a cambiare lo stato degli ammalati(guarire, peggiorare,migliorare o morire)
     tryChangeInfectedState(){
         var random = Math.floor(Math.random()*45000);
-        if(random < 1 && !this.dead){
+        if(random < 1 && !this.dead && this.infected){
             if(this.vaccinated){
                 if(this.gravlyIll){ 
-                    if(Math.floor(Math.random()*100) < 5){
+                    if(Math.floor(Math.random()*100) < document.getElementById("vaxDead").value){
                         this.setDead();
                     }else{
                         this.unsetGravlyIll();
                     }
-                }else if(this.infected){
-                    if(Math.floor(Math.random()*100) < 25){
+                }else{
+                    if(Math.floor(Math.random()*100) < document.getElementById("vaxGravlyIll").value){
                         this.setGravlyIll();
                     }else {
                         this.unsetInfected();
@@ -235,13 +268,13 @@ class Human{
                 }
             }else{
                 if(this.gravlyIll){ 
-                    if(Math.floor(Math.random()*100) < 10){
+                    if(Math.floor(Math.random()*100) < document.getElementById("norDead").value){
                         this.setDead();
                     }else{
                         this.unsetGravlyIll();
                     }
-                }else if(this.infected){
-                    if(Math.floor(Math.random()*100) < 35){
+                }else{
+                    if(Math.floor(Math.random()*100) < document.getElementById("norGravlyIll").value){
                         this.setGravlyIll();
                     }else {
                         this.unsetInfected();
@@ -249,32 +282,5 @@ class Human{
                 }
             }
         }
-    }
-
-    setGravlyIll(){
-        this.gravlyIll = true;
-        this.color = "#65078a";
-    }
-
-    unsetGravlyIll(){
-        this.gravlyIll = false;
-        this.color = '#FF0000';
-    }
-
-    unsetInfected(){
-        this.infected = false;
-        if (this.vaccinated) {
-            this.color = '#0000FF';
-        } else if(this.withMask){
-            this.color = "#00FF00";
-        }else{
-            this.color = "#999";
-        }
-    }
-
-    setDead(){
-        this.unsetInfected();
-        this.dead = true;
-        this.color = "#000";
     }
 }

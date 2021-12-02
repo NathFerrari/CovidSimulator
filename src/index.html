@@ -17,7 +17,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	</head>
     
-	<body id="body" onload="readInput(),setInfectionPercentageDefault()">
+	<body id="body" onload="readInput(),setInfectionPercentageDefault(),setChangeStatePercentageDefault()">
 		
 		<div class="menu" id="menu" onclick="menuIconOpen(this)">
 			<div class="bar1"></div>
@@ -28,27 +28,27 @@
 		<div id="parametriSimulazione">
 			<!--<input type="button" id="createHuman" value="Create Human" onclick="readInput()"><br>-->
 		
-			<h2>Persone iniziali</h2>
+			<h6>Persone iniziali</h6>
 			<input type="number" id="totHuman" value="40">
 
-			<h2>Velocità di movimento</h2>
+			<h6>Velocità di movimento</h6>
 			<input type="range" id="velocita" min="1" max="10" 
 			value="1" onchange="setVelocityMovement()">
 			<p>Value: <span id="pvelocita">1</span></p>
 
-			<h2>Contagi iniziali(rossi)</h2>
+			<h6>Contagi iniziali(rossi)</h6>
 			<input type="range" id="contagiati" min="1" max="100" 
 			value="10" onchange="checkSliderValue('contagiati')">
 			<p>Value: <span id="pcontagiati">10%</span></p>
 
-			<h2>Vaccinati iniziali(blu)</h2>
+			<h6>Vaccinati iniziali(blu)</h6>
 			<input type="checkbox" id="vaccinatiAsk" 
 			onchange="implementCheckBoxes('vaccinatiAsk','vaccinati')">
 			<input type="range" id="vaccinati" min="0" max="100"
 			value="0" onchange="checkSliderValue('vaccinati')" disabled>
 			<p>Value: <span id="pvaccinati">0%</span></p>
 
-			<h2>Persone con Mascherina iniziali(verdi)</h2>
+			<h6>Persone con Mascherina iniziali(verdi)</h6>
 			<input type="checkbox" id="conMascherinaAsk"
 			onchange="implementCheckBoxes('conMascherinaAsk','conMascherina')">
 			<input type="range" min="0" max="100" value="0" 
@@ -57,7 +57,7 @@
 			<p>Value: <span id="pconMascherina">0%</span></p>
 
 
-			<h2>Cambiare le percentuali di contagio</h2>
+			<h6>Cambiare le percentuali di contagio</h6>
 			normali<input type="range" value="0" name="nor" id="nor" max="50" onchange="printSliderValue('nor')"><br>
 			<p>Value: <span id="pnor">0%</span></p>
 			vaccinati<input type="range" value="0" name="vax" id="vax" max="50" onchange="printSliderValue('vax')"><br>
@@ -66,10 +66,30 @@
 			<p>Value: <span id="pmsk">0%</span></p>
 			<input type="button" id="setDefaultValue" value="Set Default" onclick="setInfectionPercentageDefault()"><br>
 
+			<h6>Cambiare le percentuali di cambio stato della malattia</h6>
+			<h7>Vaccinati:<br></h7>
+			Da infetto a grave(la differenza è la guarigione)<br><input type="range" value="0" name="vaxGravlyIll" id="vaxGravlyIll" max="100" onchange="printSliderValue('vaxGravlyIll')"><br>
+			<p>Value: <span id="pvaxGravlyIll">0%</span></p>
+			Da grave a morto(la differenza è il ritorno a infetto normale)<br><input type="range" value="0" name="vaxDead" id="vaxDead" max="100" onchange="printSliderValue('vaxDead')"><br>
+			<p>Value: <span id="pvaxDead">0%</span></p>
+			<h7>Non vaccinati:<br></h7>
+			Da infetto a grave(la differenza è la guarigione)<br><input type="range" value="0" name="norGravlyIll" id="norGravlyIll" max="100" onchange="printSliderValue('norGravlyIll')"><br>
+			<p>Value: <span id="pnorGravlyIll">0%</span></p>
+			Da grave a morto(la differenza è il ritorno a infetto normale)<br><input type="range" value="0" name="norDead" id="norDead" max="50" onchange="printSliderValue('norDead')"><br>
+			<p>Value: <span id="pnorDead">0%</span></p>
+			<input type="button" id="setChangeStateDefaultValue" value="Set Default" onclick="setChangeStatePercentageDefault()"><br>
+
 		</div>
 
 		<div id="gameZone">
 			<h1 id="title">Covid Simulator</h1>
+			<p><b>Legenda:</b><br>
+			Grigi: persone prive di protezioni<br>
+			Verdi: persone che portano la mascherina<br>
+			Blu: persone vaccinate<br>
+			Rossi: infetti<br>
+			Viola: malati gravemente<br>
+			Bianchi: morti</p>
 			<canvas id="container" width="600" height="500"></canvas><br>
 			<input type="button" id="start" value="Start" onclick="startMovementInterval()">
 			<input type="button" id="pause" value="Pause" onclick="pauseMovementInterval()" disabled>
@@ -105,27 +125,27 @@
 			<label>Sani vaccinati: </label><br>
 			<!--<input type="range" id="vaccinatedHealtyRange" min="0" max="100" disabled><br>-->
 			<div class="progress">
-				<div id="vaccinatedHealtyRange" class="progress-bar" role="progressbar" style="width: 25%;" aria-valuemin="0" aria-valuemax="100">25%</div>
+				<div id="vaccinatedHealtyRange" class="progress-bar" role="progressbar" style="width: 25%;display: none;" aria-valuemin="0" aria-valuemax="100">25%</div>
 			</div>
 			<label>Vaccinati infetti: </label><br>
 			<!--<input type="range" id="vaccinatedInfectedRange" min="0" max="100" disabled><br><br>-->
 			<div class="progress">
-				<div id="vaccinatedInfectedRange" class="progress-bar bg-danger" role="progressbar" style="width: 25%;" aria-valuemin="0" aria-valuemax="100">25%</div>
+				<div id="vaccinatedInfectedRange" class="progress-bar bg-danger" role="progressbar" style="width: 25%;display: none;" aria-valuemin="0" aria-valuemax="100">25%</div>
 			</div>
 			<label>Portatori di mascherina iniziali: </label><br>
 			<!--<input type="range" id="startWithMaskRange" min="0" max="100" disabled><br>-->
 			<div class="progress">
-				<div id="startWithMaskRange" class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuemin="0" aria-valuemax="100">25%</div>
+				<div id="startWithMaskRange" class="progress-bar bg-success" role="progressbar" style="width: 25%;display: none;" aria-valuemin="0" aria-valuemax="100">25%</div>
 			</div>
 			<label>Sani con mascherina: </label><br>
 			<!--<input type="range" id="withMaskHealtyRange" min="0" max="100" disabled><br>-->
 			<div class="progress">
-				<div id="withMaskHealtyRange" class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuemin="0" aria-valuemax="100">25%</div>
+				<div id="withMaskHealtyRange" class="progress-bar bg-success" role="progressbar" style="width: 25%;display: none;" aria-valuemin="0" aria-valuemax="100">25%</div>
 			</div>
 			<label>Portatori di mascherina infetti: </label><br>
 			<!--<input type="range" id="withMaskInfectedRange" min="0" max="100" disabled><br>-->
 			<div class="progress">
-				<div id="withMaskInfectedRange" class="progress-bar bg-danger" role="progressbar" style="width: 25%;" aria-valuemin="0" aria-valuemax="100">25%</div>
+				<div id="withMaskInfectedRange" class="progress-bar bg-danger" role="progressbar" style="width: 25%; display: none;" aria-valuemin="0" aria-valuemax="100">25%</div>
 			</div>
 			<label>Morti attuali: </label><br>
 			<div class="progress">
@@ -134,33 +154,50 @@
 
 			<div id="grafico"></div>
 			<script>
-				var xArray = [];
-				var yArray = [];
+				var xInfectArray = [];
+				var yInfectArray = [];
+				var xDeadArray = [];
+				var yDeadArray = [];
+				var xHealtArray = [];
+				var yHealtArray = [];
 				var second = 0;
 				setInterval(printPlot, 1000);
 				function printPlot(){
 					if(window.sessionStorage.getItem('stato') == 'start'){
 						second++;
-						yArray.push(window.sessionStorage.getItem('infect'));
-						xArray.push(second);
+						yInfectArray.push(window.sessionStorage.getItem('infect'));
+						yDeadArray.push(window.sessionStorage.getItem('dead'));
+						yHealtArray.push(window.sessionStorage.getItem('healt'));
+						xInfectArray.push(second);
+						xDeadArray.push(second);
+						xHealtArray.push(second);
 					}else if(window.sessionStorage.getItem('stato') == 'stop'){
 						second = 0;
-						xArray = [];
-						yArray = [];
+						xInfectArray = [];
+						yInfectArray = [];
+						xDeadArray = [];
+						yDeadArray = [];
+						xHealtArray = [];
+						yHealtArray = [];
 					}else if(window.sessionStorage.getItem('stato') == 'pause'){}
 
 					// Define Data
-					var data = [{
-					x: xArray,
-					y: yArray,
-					mode:"lines"
-					}];
+					var data = [
+						{x: xInfectArray, y: yInfectArray, mode:"lines",name: "Infect",line: {
+    						color: 'rgb(255, 0, 0)'}
+						},
+						{x: xDeadArray, y: yDeadArray, mode:"lines",name: "Dead",line: {
+    						color: 'rgb(0, 0, 0)'}
+						},
+						{x: xHealtArray, y: yHealtArray, mode:"lines",name: "Health",line: {
+    						color: 'rgb(0, 0, 255)'}
+						}
+					];
 
 					// Define Layout
 					var layout = {
-					xaxis: {title: "tempo(s)"},
-					yaxis: {title: "contagi(unità)"},  
-					title: "Contagi nel tempo"
+						xaxis: {title: "Seconds"},
+						title: "Contagi, morti e sani nel tempo"
 					};
 
 					// Display using Plotly
